@@ -23,6 +23,7 @@ import { nextDawnAt, worldTimeAt } from "./world-time.js";
 import { canStartClimb, stepClimbStamina } from "./climbing.js";
 import { AuroraXR } from "./xr";
 import { canXRHarvest } from "./xr-harvesting.js";
+import { PLAYER_COLLIDER_HALF_HEIGHT, PLAYER_COLLIDER_RADIUS } from "./xr-space.js";
 import {
   CHUNK_LOAD_RADIUS,
   CHUNK_SEGMENTS,
@@ -346,7 +347,7 @@ export class AuroraGame {
 
     const {x:startX,y:startY,z:startZ}=this.spawnPosition;
     this.playerBody = this.world.createRigidBody(RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(startX, startY, startZ));
-    this.playerCollider = this.world.createCollider(RAPIER.ColliderDesc.capsule(0.55, 0.38), this.playerBody);
+    this.playerCollider = this.world.createCollider(RAPIER.ColliderDesc.capsule(PLAYER_COLLIDER_HALF_HEIGHT, PLAYER_COLLIDER_RADIUS), this.playerBody);
     this.syncChunks(true);
     this.camera.position.set(startX+9, startY + 7, startZ+12);
   }

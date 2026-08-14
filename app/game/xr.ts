@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { xrFloorHeight } from "./xr-space.js";
 
 export type XRTool = "axe" | "pickaxe";
 
@@ -104,7 +105,9 @@ export class AuroraXR {
     this.renderer.xr.setReferenceSpaceType("local-floor");
     this.statusCanvas.width = 512;
     this.statusCanvas.height = 300;
-    this.statusPanel.rotation.set(-Math.PI / 2, 0, Math.PI);
+    // Quest's left grip already supplies the wrist orientation. The previous
+    // extra half-turn made the watch text appear upside down.
+    this.statusPanel.rotation.set(-Math.PI / 2, 0, 0);
     this.statusPanel.position.set(0, .07, .08);
     this.statusPanel.visible = false;
     this.setupControllers();
@@ -220,7 +223,9 @@ export class AuroraXR {
 
   syncPlayer(bodyPosition: { x: number; y: number; z: number }) {
     if (!this.presenting) return;
-    this.rig.position.set(bodyPosition.x, bodyPosition.y - 2.2, bodyPosition.z);
+    // The Rapier translation is the capsule center, not the player's floor.
+    // Anchor local-floor at the capsule bottom after gravity has settled it.
+    this.rig.position.set(bodyPosition.x, xrFloorHeight(bodyPosition.y), bodyPosition.z);
   }
 
   readLocomotion(): XRLocomotion {
