@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
  * Rewrites root-absolute asset URLs so the static export works under
- * https://<user>.github.io/aurora-wilds/
+ * https://<user>.github.io/aurora-wilds-vr/
  */
 import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = path.resolve("dist/client");
-const PREFIX = "/aurora-wilds";
+const PREFIX = "/aurora-wilds-vr";
 const EXTENSIONS = new Set([".html", ".js", ".css", ".json", ".rsc", ".svg"]);
 
 function walk(dir) {
@@ -27,6 +27,9 @@ function walk(dir) {
       .replaceAll('href="/favicon', `href="${PREFIX}/favicon`)
       .replaceAll('href="/og', `href="${PREFIX}/og`)
       .replaceAll('src="/favicon', `src="${PREFIX}/favicon`)
+      .replaceAll("url('/og", `url('${PREFIX}/og`)
+      .replaceAll('url("/og', `url("${PREFIX}/og`)
+      .replaceAll('url(/og', `url(${PREFIX}/og`)
       .replaceAll('url(/assets/', `url(${PREFIX}/assets/`)
       .replaceAll('url("/assets/', `url("${PREFIX}/assets/`)
       // vinext on Windows can embed absolute font paths during prerender
